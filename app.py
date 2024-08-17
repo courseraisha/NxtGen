@@ -25,8 +25,9 @@ llm = ChatGroq(groq_api_key=groq_api_key, model_name="Llama3-8b-8192")
 # Create the prompt template
 prompt = ChatPromptTemplate.from_template(
     """
-    Answer the questions based on the provided context only.
-    Please provide the most accurate response based on the question.
+    You are a chatbot for a software and it solution company,
+    Answer the questions based on the provided context.
+    Please provide accurate response based on the question and act like a professional bot.
     <context>
     {context}
     <context>
