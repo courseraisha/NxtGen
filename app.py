@@ -36,18 +36,6 @@ prompt = ChatPromptTemplate.from_template(
 
 # Initialize Streamlit page
 st.set_page_config(page_title="NxtGen ChatBot", page_icon="small_logo.jpeg", layout='wide')
-st.markdown("""
-    <style>
-    .header {
-        text-align: center;
-        padding: 10px;
-        font-size: 40px;
-        font-weight: bold;
-        color: black;
-    }
-    </style>
-    <div class="header">Welcome to NxtGen's AI-Powered Chatbot</div>
-""", unsafe_allow_html=True)
 
 st.image("big_logo.jpeg", width=600)
 st.markdown("")
