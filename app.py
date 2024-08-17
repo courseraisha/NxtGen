@@ -6,7 +6,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from dotenv import load_dotenv
 import time
@@ -68,10 +68,10 @@ if st.button("Enter"):
         # Perform vector embedding if necessary
         if "vectors" not in st.session_state:
             st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-            st.session_state.loader = PyPDFDirectoryLoader("/Introduction to NxtGen Innovation (1).pdf")  # Data Ingestion
+            st.session_state.loader = PyPDFLoader("Introduction to NxtGen Innovation (1).pdf")  # Single PDF File
             st.session_state.docs = st.session_state.loader.load()  # Document Loading
             st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)  # Chunk Creation
-            st.session_state.final_documents = st.session_state.text_splitter.split_documents(st.session_state.docs[:20])  # Splitting
+            st.session_state.final_documents = st.session_state.text_splitter.split_documents(st.session_state.docs)  # Splitting
             st.session_state.vectors = FAISS.from_documents(st.session_state.final_documents, st.session_state.embeddings)  # Vector embeddings
 
         # Create document chain and retriever
