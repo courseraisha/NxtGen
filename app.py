@@ -117,7 +117,7 @@ if st.button("Enter"):
                     start = time.process_time()
                     response = retrieval_chain.invoke({'input': user_input})
                     response_time = time.process_time() - start
-                    bot_response = response['answer'] if response.get('answer') else fallback_response
+                    bot_response = response.get('answer', fallback_response)  # Use fallback if no answer
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
