@@ -86,7 +86,7 @@ intent_responses = {
 fallback_response = "I'm not sure how to respond to that. Could you please rephrase or ask something else?"
 
 # Input area for user's question
-user_input = st.chat_input("**Enter Your Question**", key="user_input", placeholder="Type your question here...")
+user_input = st.chat_input("Type your question here...")
 
 # Process input when the button is clicked
 
