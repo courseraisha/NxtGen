@@ -86,49 +86,49 @@ intent_responses = {
 fallback_response = "I'm not sure how to respond to that. Could you please rephrase or ask something else?"
 
 # Input area for user's question
-user_input = st.text_input("**Enter Your Question**", key="user_input", placeholder="Type your question here...")
+user_input = st.chat_input("**Enter Your Question**", key="user_input", placeholder="Type your question here...")
 
 # Process input when the button is clicked
-if st.button("Enter"):
-    if user_input:
-        # Classify the intent
-        intent = classify_intent(user_input)
-        bot_response = intent_responses[intent]
-        
-        if bot_response is None:
-            # Perform vector embedding if necessary
-            if "vectors" not in st.session_state:
-                st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-                st.session_state.loader = PyPDFLoader("Introduction to  NxtGen Innovation (1).pdf")  # Single PDF File
-                st.session_state.docs = st.session_state.loader.load()  # Document Loading
-                st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)  # Chunk Creation
-                st.session_state.final_documents = st.session_state.text_splitter.split_documents(st.session_state.docs)  # Splitting
-                st.session_state.vectors = FAISS.from_documents(st.session_state.final_documents, st.session_state.embeddings)  # Vector embeddings
 
-            # Create document chain and retriever
-            document_chain = create_stuff_documents_chain(llm, prompt)
-            retriever = st.session_state.vectors.as_retriever()
-            retrieval_chain = create_retrieval_chain(retriever, document_chain)
+if user_input:
+    # Classify the intent
+    intent = classify_intent(user_input)
+    bot_response = intent_responses[intent]
+    
+    if bot_response is None:
+        # Perform vector embedding if necessary
+        if "vectors" not in st.session_state:
+            st.session_state.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+            st.session_state.loader = PyPDFLoader("Introduction to  NxtGen Innovation (1).pdf")  # Single PDF File
+            st.session_state.docs = st.session_state.loader.load()  # Document Loading
+            st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)  # Chunk Creation
+            st.session_state.final_documents = st.session_state.text_splitter.split_documents(st.session_state.docs)  # Splitting
+            st.session_state.vectors = FAISS.from_documents(st.session_state.final_documents, st.session_state.embeddings)  # Vector embeddings
 
-            # Show loading spinner
-            with st.spinner('Processing your request...'):
-                try:
-                    # Process the user input and generate a response
-                    start = time.process_time()
-                    response = retrieval_chain.invoke({'input': user_input})
-                    response_time = time.process_time() - start
-                    bot_response = response.get('answer', fallback_response)  # Use fallback if no answer
+        # Create document chain and retriever
+        document_chain = create_stuff_documents_chain(llm, prompt)
+        retriever = st.session_state.vectors.as_retriever()
+        retrieval_chain = create_retrieval_chain(retriever, document_chain)
 
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
-                    bot_response = "Sorry, I couldn't process your request. Please try again later."
+        # Show loading spinner
+        with st.spinner('Processing your request...'):
+            try:
+                # Process the user input and generate a response
+                start = time.process_time()
+                response = retrieval_chain.invoke({'input': user_input})
+                response_time = time.process_time() - start
+                bot_response = response.get('answer', fallback_response)  # Use fallback if no answer
 
-        # Add user input and bot response to chat history
-        st.session_state.chat_history.append({"user": user_input, "bot": bot_response})
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+                bot_response = "Sorry, I couldn't process your request. Please try again later."
 
-        # Display chat history using st.chat_message
-        for chat in st.session_state.chat_history:
-            with st.chat_message("user"):
-                st.markdown(f"You: {chat['user']}")
-            with st.chat_message("assistant"):
-                st.markdown(f"Bot: {chat['bot']}")
+    # Add user input and bot response to chat history
+    st.session_state.chat_history.append({"user": user_input, "bot": bot_response})
+
+    # Display chat history using st.chat_message
+    for chat in st.session_state.chat_history:
+        with st.chat_message("user"):
+            st.markdown(f"You: {chat['user']}")
+        with st.chat_message("assistant"):
+            st.markdown(f"Bot: {chat['bot']}")
