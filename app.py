@@ -117,5 +117,5 @@ if user_input:
     for chat in st.session_state.chat_history:
         with st.chat_message("user"):
             st.markdown(f"You: {chat['user']}")
-        with st.chat_message("nxtgen", avatar=st.image('small_logo.jpeg')):
+        with st.chat_message("ai"):
             st.markdown(f"Bot: {chat['bot']}")
