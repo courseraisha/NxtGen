@@ -49,11 +49,9 @@ st.markdown("""
     <div class="header">Welcome to NxtGen's AI-Powered Chatbot</div>
 """, unsafe_allow_html=True)
 
-# Sidebar content
-with st.sidebar:
-    st.image("big_logo.jpeg", width=300)
-    st.markdown("")
-    st.markdown("**NxtGen Chatbot** is here to assist you with your queries.")
+st.image("big_logo.jpeg", width=600)
+st.markdown("")
+st.markdown("**NxtGen Chatbot** is here to assist you with your queries.")
 
 # Initialize chat history
 if "chat_history" not in st.session_state:
